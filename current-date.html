@@ -1,3 +1,14 @@
+<template>
+  <style>
+    p {
+      padding: 10px;
+      color: red;
+    }
+  </style>
+  <p class="default-content"></p>
+  <p class="time"></p>
+</template>
+
 <script>
 
   (function() {
@@ -5,10 +16,29 @@
     //prototipo de elemento, a partir del elemento base
     var prototype = Object.create(HTMLElement.prototype);
 
+    //acceso a nuestro template
+    var templateContent = document.currentScript.ownerDocument.querySelector('template').content;
+    
     //manejador del evento created
     function onCreatedComponent() {
-      this.textContent = new Date().toString();
-      console.log(this.textContent);
+
+      // guardo el contenido del elemento y luego lo borro
+      var elementContent = this.innerHTML;
+      this.innerHTML = "";
+
+      // clono el template
+      var clone = document.importNode(templateContent, true);
+
+      // acceso a los elementos concretos
+      var defaultContent = clone.querySelector("p.default-content");
+      var time = clone.querySelector("p.time");
+
+      // inicializamos sus datos
+      defaultContent.innerHTML = elementContent;
+      time.innerHTML = new Date().toString();
+
+      // añadimos como shadow dom
+      this.createShadowRoot().appendChild(clone);
     }
     
     // definicion del manejador para el evento 'created'
