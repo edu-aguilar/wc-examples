@@ -1,0 +1,24 @@
+<script>
+
+  (function() {
+
+    //prototipo de elemento, a partir del elemento base
+    var prototype = Object.create(HTMLElement.prototype);
+
+    //manejador del evento created
+    function onCreatedComponent() {
+      this.textContent = new Date().toString();
+      console.log(this.textContent);
+    }
+    
+    // definicion del manejador para el evento 'created'
+    prototype.createdCallback = onCreatedComponent;
+
+    //Registro el componente 'current-date'
+    document.registerElement('current-date', {
+      prototype: prototype
+    });
+
+  })()
+
+</script>
