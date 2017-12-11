@@ -1,57 +1,48 @@
-<template>
-  <style>
-    p {
-      padding: 10px;
-      color: red;
-    }
 
-    p.digital {
-      font-size: 30px;
-      color: black;
-      border: solid 2px black;
-      width: fit-content;
-    }
-  </style>
-  <p class="default-content"></p>
-  <p class="time"></p>
-</template>
+<dom-module id="current-date">
 
-<script>
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      :host([digital]) p {
+        font-size: 30px;
+        color: black;
+        border: solid 2px black;
+        width: fit-content;
+      }
+      p {
+        padding: 10px;
+        color: red;
+      }
+    </style>
+    <slot></slot>
+    <p>[[date]]</p>
+  </template>
 
-  (function() {
+  <script>
+    class CurrentDate extends Polymer.Element {
 
-    var prototype = Object.create(HTMLElement.prototype);
-
-    var templateContent = document.currentScript.ownerDocument.querySelector('template').content;
-    
-    function onCreatedComponent() {
-
-      var elementContent = this.innerHTML;
-      this.innerHTML = "";
-
-      var clone = document.importNode(templateContent, true);
-
-      var defaultContent = clone.querySelector("p.default-content");
-      var time = clone.querySelector("p.time");
-
-      defaultContent.innerHTML = elementContent;
-      var currentDate = new Date();
-      time.innerHTML = currentDate.toString();
-
-      if (this.hasAttribute('type') && this.getAttribute('type') === 'digital') {
-        time.classList += ' digital';
-        time.innerHTML = currentDate.getHours() + ' : ' + currentDate.getMinutes();
+      static get is() { return "current-date"; }
+      static get properties() {
+        return {
+          digital: {
+            type: Boolean,
+            value: false,
+            observer: '_initDate'
+          }
+        }
       }
 
-      this.createShadowRoot().appendChild(clone);
+      _initDate(newValue, oldValue) {
+        const date = new Date();
+        this.date = newValue ? date.getHours() + ' : ' + date.getMinutes() : date.toString();
+      }
+
     }
-    
-    prototype.createdCallback = onCreatedComponent;
 
-    document.registerElement('current-date', {
-      prototype: prototype
-    });
+    customElements.define(CurrentDate.is, CurrentDate);
+  </script>
 
-  })()
-
-</script>
+</dom-module>
