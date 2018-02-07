@@ -35,9 +35,11 @@
         }
       }
 
-      _initDate(newValue, oldValue) {
-        const date = new Date();
-        this.date = newValue ? date.getHours() + ' : ' + date.getMinutes() : date.toString();
+      _initDate(isDigital, oldValue) {
+        setInterval(() => {
+          const date = new Date();
+          this.date = isDigital ? date.getHours() + ' : ' + date.getMinutes() + ' : ' + date.getSeconds() : date.toString();
+        }, 1000);
       }
 
     }
